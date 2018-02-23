@@ -1,6 +1,8 @@
 package main
 
 import (
+	"bytes"
+	"fmt"
 	"image"
 	"image/color"
 	"image/draw"
@@ -76,10 +78,12 @@ func main() {
 
 	widthCount := int(math.Ceil(width / imageMax))
 	heightCount := int(math.Ceil(height / imageMax))
+	dispTxt := &bytes.Buffer{}
 	for h := 1; h <= heightCount; h++ {
 		for w := 1; w <= widthCount; w++ {
-			fileName := name + "_" + strconv.Itoa(int(h)) + "_" + strconv.Itoa(int(w)) + ext
-			tmpFile, err := os.Create(fileName)
+			fileName := name + "_" + strconv.Itoa(int(h)) + "_" + strconv.Itoa(int(w))
+			fmt.Fprintf(dispTxt, ":%s:", fileName)
+			tmpFile, err := os.Create(fileName + ext)
 			if err != nil {
 				log.Fatal(err)
 			}
@@ -123,5 +127,8 @@ func main() {
 			}
 
 		}
+		dispTxt.Write([]byte("\n"))
 	}
+
+	fmt.Print(dispTxt.String())
 }
